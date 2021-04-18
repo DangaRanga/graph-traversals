@@ -59,37 +59,33 @@ def create_spanning_tree(graph, starting_vertex):
 
     From: https://bradfieldcs.com/algos/graphs/prims-spanning-tree-algorithm/
 
-    Args: 
+    Args:
         <dict> graph:
         <string> starting_vertex
 
-    Returns:    
+    Returns:
         <list> The traversal order of the tree
 
     """
     # Initialize the minimal spanning tree
     mst = defaultdict(set)
     visited = [starting_vertex]
-
-    # Retrieve the edges of the starting vertex
     edges = [
-        (weight, starting_vertex, to)
-        for to, weight in graph[starting_vertex].items()
+        (cost, starting_vertex, to)
+        for to, cost in graph[starting_vertex].items()
     ]
+    heapq.heapify(edges)
 
-    # Iterate whilst not a spanning tree
     while edges:
-        weight, frm, to = heapq.heappop(edges)
-
-        # Add edges that have not been visited
+        cost, frm, to = heapq.heappop(edges)
         if to not in visited:
             visited.append(to)
             mst[frm].add(to)
-            for to_next, weight in graph[to].items():
+            for to_next, cost in graph[to].items():
                 if to_next not in visited:
-                    heapq.heappush(edges, (weight, to, to_next))
+                    heapq.heappush(edges, (cost, to, to_next))
 
-    return visited
+    return list(visited)
 
 
 def shortest_path(first_node, graph):
@@ -216,14 +212,14 @@ def update_data(data_dict, weighted=True):
 
 
 graph = {
-    'A': "C E F H",
-    'B': "A G H",
-    'C': "D E F G",
-    'D': "A B C G H",
-    'E': "A D F",
-    'F': "A C G H",
-    'G': "A F",
-    'H': "A C D"
+    'A': "	('C', 18) ('E', 7) ('G', 10) ('H', 17)",
+    #  'B': "('C', 8) ('D', 9) ('H', 14)",
+    'C': "	('A', 18) ('D', 6) ('F', 15) ('G', 17)",
+    'D': "	('C', 6) ('G', 3) ('H', 8)",
+    'E': "('A', 7) ('F', 9) ('G', 18)",
+    'F': "	('C', 15) ('E', 9)",
+    'G': "	('A', 10) ('C', 17) ('D', 3) ('E', 18) ('H', 14)",
+    'H': "	('A', 17) ('D', 8) ('G', 14)"
 }
 
 
@@ -237,17 +233,17 @@ class TraversalModes(enum.Enum):
 
 
 # Initializing parameters for methods
-mode = TraversalModes('bfs')
+mode = TraversalModes('prims')
 starting_node = 'A'
-weighted = False
-latest = False
-
+weighted = True
+latest = True
 
 # Parses the data from the graph string
 update_data(graph, weighted=weighted)
 
 # Remove weighted for BFS and DFS
 weighted_types = [TraversalModes.prims, TraversalModes.dijkstra]
+
 if weighted and (mode not in weighted_types):
     remove_weights(graph)
 
