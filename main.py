@@ -57,8 +57,8 @@ def graph_main():
 
     # Valid Options
     bfs_options = ["1", "BFS", "BREADTH", "BREATH"]
-    dfs_options = ["2", "DFS", "DEPTH"]
-    dijk_options = ["3", "DIJK", "DJ"]
+    dfs_options = ["3", "DFS", "DEPTH"]
+    dijk_options = ["2", "DIJK", "DJ"]
     prims_options = ["4", "PRIM", "PRIMS", "P"]
 
     # Infinite Loop
@@ -298,6 +298,7 @@ def create_graph():
     while (True):
         user_input = input("# ").rstrip()
         user_input = user_input.upper()
+        user_input = user_input.replace('"', "'")
 
         if len(user_input) == 0:
             break
