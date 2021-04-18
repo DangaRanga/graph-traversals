@@ -1,6 +1,7 @@
 
 # Global imports
 import sys
+from graph import *
 # import graph
 # import traversals
 
@@ -90,6 +91,7 @@ def bfs_main():
 
     # Get the graph
     graph = create_graph()
+    update_data(graph, weighted=False)
 
     # Get lexicographically Early or Latest
     print()
@@ -117,7 +119,11 @@ def bfs_main():
     starting_node = starting_node.upper()
     print("####################################")
 
-    print(f"{graph}\n{latest}\n{starting_node}")
+    # Run Breadth first search
+    bfs_visited_nodes = lexico_bfs(graph, starting_node, latest=latest)
+
+    # print(f"{graph}\n{latest}\n{starting_node}")
+    print(f'BFS visited nodes are: {bfs_visited_nodes}')
 
 # DFS Main
 # -----------------------------------------------------
@@ -132,6 +138,7 @@ def dfs_main():
 
     # Get the graph
     graph = create_graph()
+    update_data(graph, weighted=False)
 
     # Get lexicographically Early or Latest
     print()
@@ -159,7 +166,12 @@ def dfs_main():
     starting_node = starting_node.upper()
     print("####################################")
 
-    print(f"{graph}\n{latest}\n{starting_node}")
+    # Run recursive depth first search
+    visited_nodes = []
+    lexico_dfs(visited_nodes, graph, starting_node, latest=latest)
+
+    # print(f"{graph}\n{latest}\n{starting_node}")
+    print(f'DFS visited are: {visited_nodes}')
 
 # DIJKSTRA Main
 # -----------------------------------------------------
