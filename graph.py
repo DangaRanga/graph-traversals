@@ -1,4 +1,7 @@
 """Defines common graphing algorithms."""
+import heapq
+import enum
+from collections import defaultdict
 
 
 def lexico_dfs(visited, graph, node, latest=False):
@@ -47,6 +50,45 @@ def lexico_bfs(graph, node, latest=False):
                 queue.append(neighbour)
             else:
                 continue
+    return visited
+
+
+def create_spanning_tree(graph, starting_vertex):
+    """Create a minimal spanning tree and returns the traversal order.
+    Using Prim's algorithm for a minimal spannning tree.
+
+    From: https://bradfieldcs.com/algos/graphs/prims-spanning-tree-algorithm/
+
+    Args: 
+        <dict> graph:
+        <string> starting_vertex
+
+    Returns:    
+        <list> The traversal order of the tree
+
+    """
+    # Initialize the minimal spanning tree
+    mst = defaultdict(set)
+    visited = [starting_vertex]
+
+    # Retrieve the edges of the starting vertex
+    edges = [
+        (weight, starting_vertex, to)
+        for to, weight in graph[starting_vertex].items()
+    ]
+
+    # Iterate whilst not a spanning tree
+    while edges:
+        weight, frm, to = heapq.heappop(edges)
+
+        # Add edges that have not been visited
+        if to not in visited:
+            visited.append(to)
+            mst[frm].add(to)
+            for to_next, weight in graph[to].items():
+                if to_next not in visited:
+                    heapq.heappush(edges, (weight, to, to_next))
+
     return visited
 
 
@@ -151,7 +193,7 @@ def update_data(data_dict, weighted=True):
 
 # ---------------------  Current Instructions  ------------------------------ #
 
-# Version 1.2 - Without Prims
+# Version 1.2 - With Prims and refactoring
 
 # How to use:
 
@@ -174,36 +216,44 @@ def update_data(data_dict, weighted=True):
 
 
 graph = {
-    'A': "C D G H",
-    'B': "C D E G",
-    'C': "A B G H",
-    'D': "A B E H",
-    'E': "B D H",
-    'F': "H",
-    'G': "A B C",
-    'H': "A C D E F"
+    'A': "	('E', 8)",
+    'B': "	('C', 7) ('D', 17) ('F', 4) ('H', 14)",
+    'C': "	('B', 7) ('F', 3)",
+    'D': "	('B', 17) ('E', 14)",
+    'E': "	('A', 8) ('D', 14) ('G', 10)",
+    'F': "('B', 4) ('C', 3) ('G', 8)",
+    'G': "('E', 10) ('F', 8)",
+    'H': "('B', 14)"
 }
 
-options = {
-    'bfs': False,
-    'dfs': True,
-    'dijkstra': False
-}
+
+class TraversalModes(enum.Enum):
+    """Defines the traversal modes."""
+
+    breadth_first = 'bfs'
+    depth_first = 'dfs'
+    dijkstra = 'dijkstra'
+    prims = 'prims'
+
+
+mode = TraversalModes('prims')
 
 # Initializing parameters for methods
-starting_node = 'G'
-weighted = False
+starting_node = 'H'
+weighted = True
 latest = True
+
 
 # Parses the data from the graph string
 update_data(graph, weighted=weighted)
 
 # Remove weighted for BFS and DFS
-if weighted and options.get('dijkstra') != True:
+weighted_types = [TraversalModes.prims, TraversalModes.dijkstra]
+if weighted and (mode not in weighted_types):
     remove_weights(graph)
 
 # ---------------------  Function calls for BFS ----------------------------- #
-if options.get('bfs'):
+if mode == TraversalModes.breadth_first:
 
     # Run Breadth first search
     bfs_visited_nodes = lexico_bfs(graph, starting_node, latest=latest)
@@ -211,7 +261,7 @@ if options.get('bfs'):
     print(f'BFS visited nodes are: {bfs_visited_nodes}')
 
 # ---------------------  Function calls for DFS ----------------------------- #
-elif options.get('dfs'):
+elif mode == TraversalModes.depth_first:
 
     # Run recursive depth first search
     visited_nodes = []
@@ -219,7 +269,7 @@ elif options.get('dfs'):
     print(f'DFS visited are: {visited_nodes}')
 
 # ---------------------  Function Call for Dijkstra's  ---------------------- #
-elif options.get('dijkstra'):
+elif mode == TraversalModes.dijkstra:
 
     # Create the graph to work with Dijkstra's
     newGraph = tuple_edges_to_dict(graph)
@@ -228,3 +278,11 @@ elif options.get('dijkstra'):
     traversal_order = shortest_path(starting_node, newGraph)
 
     print(f'Dijkstra Traversal order: {traversal_order}')
+
+# ---------------------  Function Call for Prim's  -------------------------- #
+else:
+
+    new_graph = tuple_edges_to_dict(graph)
+
+    traversal_order = create_spanning_tree(new_graph, starting_node)
+    print(f'Prims Traversal Order {traversal_order}')
