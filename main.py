@@ -11,6 +11,7 @@ exit_options = ["EXIT", "0", ""]
 lex_options = {"EARLY": False, "LATE": True, "LATEST": True,
                "1": False, "2": True, "E": False, "L": True}
 
+
 # ---------- Menu Options -----------------------------
 
 
@@ -41,9 +42,10 @@ def graph_menu():
     print()
     print("######################################")
     print("# 0 - EXIT                           #")
-    print("# 1 - BFS | Breadth First            #")
+    print("# 1 - BFS   | Breadth First          #")
     print("# 2 - Dijkstra's                     #")
-    print("# 3 - DFS | Depth First              #")
+    print("# 3 - DFS   | Depth First            #")
+    print("# 4 - PRIMS                          #")
     print("######################################")
 
 
@@ -57,6 +59,7 @@ def graph_main():
     bfs_options = ["1", "BFS", "BREADTH", "BREATH"]
     dfs_options = ["2", "DFS", "DEPTH"]
     dijk_options = ["3", "DIJK", "DJ"]
+    prims_options = ["4", "PRIM", "PRIMS", "P"]
 
     # Infinite Loop
     while (True):
@@ -67,11 +70,16 @@ def graph_main():
 
         # Check for valid options
         if (option in bfs_options):
-            bfs_main()
+            # bfs_main()
+            unsure_main(TraversalModes('bfs'))
         elif (option in dfs_options):
-            dfs_main()
+            # dfs_main()
+            unsure_main(TraversalModes('dfs'))
         elif (option in dijk_options):
-            dijkstra_main()
+            # dijkstra_main()
+            unsure_main(TraversalModes('dijkstra'))
+        elif (option in prims_options):
+            unsure_main(TraversalModes('prims'))
         elif (option in exit_options):
             break
         else:
@@ -179,6 +187,93 @@ def dfs_main():
 
 def dijkstra_main():
     pass
+
+# NOT TOO SURE WHAT GOING ON Main
+# -----------------------------------------------------
+
+
+def unsure_main(mode):
+    # Intro
+    print()
+    print("####################################")
+    print("# NO TITLE")
+    print("####################################")
+
+    # Get the graph
+    graph = create_graph()
+
+    # Get lexicographically Early or Latest
+    print()
+    print("####################################")
+    print("# Lexicographically                #")
+    print("####################################")
+    print("# 1 - EARLY                        #")
+    print("# 2 - LATEST                       #")
+    print("#----------------------------------#")
+
+    # Get the latest boolean
+    latest_option = input("# ").rstrip()
+    latest_option = latest_option.upper()
+    if latest_option in lex_options.keys():
+        latest = lex_options[latest_option]
+    else:
+        print("\n--------------------------------------")
+        print(f"# {latest_option} | Not Valid - False will be used as default value")
+        print("--------------------------------------\n")
+    print("####################################")
+
+    print()
+    print("####################################")
+    starting_node = input("# Start Node = ").rstrip()
+    starting_node = starting_node.upper()
+    print("####################################")
+
+    # Initializing parameters for methods
+    weighted = True
+
+    # Parses the data from the graph string
+    update_data(graph, weighted=weighted)
+
+    # Remove weighted for BFS and DFS
+    weighted_types = [TraversalModes.prims, TraversalModes.dijkstra]
+
+    if weighted and (mode not in weighted_types):
+        remove_weights(graph)
+
+    # ---------------------  Function calls for BFS ----------------------------- #
+    if mode == TraversalModes.breadth_first:
+
+        # Run Breadth first search
+        bfs_visited_nodes = lexico_bfs(graph, starting_node, latest=latest)
+
+        print(f'BFS visited nodes are: {bfs_visited_nodes}')
+
+    # ---------------------  Function calls for DFS ----------------------------- #
+    elif mode == TraversalModes.depth_first:
+
+        # Run recursive depth first search
+        visited_nodes = []
+        lexico_dfs(visited_nodes, graph, starting_node, latest=latest)
+        print(f'DFS visited are: {visited_nodes}')
+
+    # ---------------------  Function Call for Dijkstra's  ---------------------- #
+    elif mode == TraversalModes.dijkstra:
+
+        # Create the graph to work with Dijkstra's
+        newGraph = tuple_edges_to_dict(graph)
+
+        # Run Dijkstra's algorithm to get the traversal order
+        traversal_order = shortest_path(starting_node, newGraph)
+
+        print(f'Dijkstra Traversal order: {traversal_order}')
+
+    # ---------------------  Function Call for Prim's  -------------------------- #
+    else:
+
+        new_graph = tuple_edges_to_dict(graph)
+
+        traversal_order = create_spanning_tree(new_graph, starting_node)
+        print(f'Prims Traversal Order {traversal_order}')
 
 # -----------------------------------------------------
 # Main for Traversals
