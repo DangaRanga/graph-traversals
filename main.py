@@ -6,6 +6,9 @@ import sys
 
 # Global Variables
 exit_options = ["EXIT", "0", ""]
+# Lexicographical options
+lex_options = {"EARLY": False, "LATE": True, "LATEST": True,
+               "1": False, "2": True, "E": False, "L": True}
 
 # ---------- Menu Options -----------------------------
 
@@ -34,6 +37,7 @@ def menu():
 def graph_menu():
 
     # Present Menu
+    print()
     print("######################################")
     print("# 0 - EXIT                           #")
     print("# 1 - BFS | Breadth First            #")
@@ -78,14 +82,84 @@ def graph_main():
 # BFS Main
 # -----------------------------------------------------
 def bfs_main():
-    pass
+    # Intro
+    print()
+    print("####################################")
+    print("# BFS")
+    print("####################################")
+
+    # Get the graph
+    graph = create_graph()
+
+    # Get lexicographically Early or Latest
+    print()
+    print("####################################")
+    print("# Lexicographically                #")
+    print("####################################")
+    print("# 1 - EARLY                        #")
+    print("# 2 - LATEST                       #")
+    print("#----------------------------------#")
+
+    # Get the latest boolean
+    latest_option = input("# ").rstrip()
+    latest_option = latest_option.upper()
+    if latest_option in lex_options.keys():
+        latest = lex_options[latest_option]
+    else:
+        print("\n--------------------------------------")
+        print(f"# {latest_option} | Not Valid - False will be used as default value")
+        print("--------------------------------------\n")
+    print("####################################")
+
+    print()
+    print("####################################")
+    starting_node = input("# Start Node = ").rstrip()
+    starting_node = starting_node.upper()
+    print("####################################")
+
+    print(f"{graph}\n{latest}\n{starting_node}")
 
 # DFS Main
 # -----------------------------------------------------
 
 
 def dfs_main():
-    pass
+    # Intro
+    print()
+    print("####################################")
+    print("# DFS")
+    print("####################################")
+
+    # Get the graph
+    graph = create_graph()
+
+    # Get lexicographically Early or Latest
+    print()
+    print("####################################")
+    print("# Lexicographically                #")
+    print("####################################")
+    print("# 1 - EARLY                        #")
+    print("# 2 - LATEST                       #")
+    print("#----------------------------------#")
+
+    # Get the latest boolean
+    latest_option = input("# ").rstrip()
+    latest_option = latest_option.upper()
+    if latest_option in lex_options.keys():
+        latest = lex_options[latest_option]
+    else:
+        print("\n--------------------------------------")
+        print(f"# {latest_option} | Not Valid - False will be used as default value")
+        print("--------------------------------------\n")
+    print("####################################")
+
+    print()
+    print("####################################")
+    starting_node = input("# Start Node = ").rstrip()
+    starting_node = starting_node.upper()
+    print("####################################")
+
+    print(f"{graph}\n{latest}\n{starting_node}")
 
 # DIJKSTRA Main
 # -----------------------------------------------------
@@ -122,9 +196,14 @@ def create_graph():
             break
         # -----------------------
 
-        # Split up input
-        broken = user_input.split(":")
-        node, neighbor = broken[0].strip(), broken[1]
+        try:
+            # Split up input
+            broken = user_input.split(":")
+            node, neighbor = broken[0].strip(), broken[1]
+        except ValueError:
+            print("\n--------------------------------------")
+            print(f"# An error occurred.")
+            print("--------------------------------------\n")
 
         # Assign values to graph
         graph[node] = neighbor
@@ -140,6 +219,7 @@ if __name__ == "__main__":
     graph_options = ["1", "GRAPH", "GRAPHS"]
     traversal_options = ["2", "TRAVERSAL", "TRAVERSALS"]
 
+    print()
     print("######################################")
     print("#               WELCOME              #")
     print("######################################")
