@@ -216,14 +216,14 @@ def update_data(data_dict, weighted=True):
 
 
 graph = {
-    'A': "	('E', 8)",
-    'B': "	('C', 7) ('D', 17) ('F', 4) ('H', 14)",
-    'C': "	('B', 7) ('F', 3)",
-    'D': "	('B', 17) ('E', 14)",
-    'E': "	('A', 8) ('D', 14) ('G', 10)",
-    'F': "('B', 4) ('C', 3) ('G', 8)",
-    'G': "('E', 10) ('F', 8)",
-    'H': "('B', 14)"
+    'A': "C E F H",
+    'B': "A G H",
+    'C': "D E F G",
+    'D': "A B C G H",
+    'E': "A D F",
+    'F': "A C G H",
+    'G': "A F",
+    'H': "A C D"
 }
 
 
@@ -236,12 +236,11 @@ class TraversalModes(enum.Enum):
     prims = 'prims'
 
 
-mode = TraversalModes('prims')
-
 # Initializing parameters for methods
-starting_node = 'H'
-weighted = True
-latest = True
+mode = TraversalModes('bfs')
+starting_node = 'A'
+weighted = False
+latest = False
 
 
 # Parses the data from the graph string
