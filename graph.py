@@ -161,6 +161,7 @@ def parse_weighted_data(data_dict):
 
         # Parse the string if it isn't empty
         if data_dict[key] != "":
+            print(data_dict[key])
             data_dict[key] = list(eval(data_dict[key]))
         else:
             # Welp this is probably dumb but it works for now
@@ -211,15 +212,20 @@ def update_data(data_dict, weighted=True):
 # ---------------------  Paste Graph Values Here ---------------------------- #
 
 
+# A F D E H B G C
+# NB) If a node is not specified in the graph, comment it out.
+# Especially for Prims and Dijkstra graphs, as it breaks the script
+#  (I'll fix it in the future)
+
 graph = {
-    'A': "	('C', 18) ('E', 7) ('G', 10) ('H', 17)",
-    #  'B': "('C', 8) ('D', 9) ('H', 14)",
-    'C': "	('A', 18) ('D', 6) ('F', 15) ('G', 17)",
-    'D': "	('C', 6) ('G', 3) ('H', 8)",
-    'E': "('A', 7) ('F', 9) ('G', 18)",
-    'F': "	('C', 15) ('E', 9)",
-    'G': "	('A', 10) ('C', 17) ('D', 3) ('E', 18) ('H', 14)",
-    'H': "	('A', 17) ('D', 8) ('G', 14)"
+    'A': "('C', 6) ('G', 6) ('H', 10)",
+    'B': "('D', 15) ('F', 2) ('G', 19) ('H', 13)",
+    'C': "('A', 6) ('D', 19) ('F', 2)",
+    'D': "('B', 15) ('C', 19) ('E', 17) ('F', 16) ('G', 14)",
+    'E': "('D', 17) ('F', 16) ('G', 15) ('H', 4)",
+    'F': "('B', 2) ('C', 2) ('D', 16) ('E', 16) ('H', 17)",
+    'G': "('A', 6) ('B', 19) ('D', 14) ('E', 15)",
+    'H': "('A', 10) ('B', 13) ('E', 4) ('F', 17)"
 }
 
 
@@ -233,10 +239,10 @@ class TraversalModes(enum.Enum):
 
 
 # Initializing parameters for methods
-mode = TraversalModes('prims')
+mode = TraversalModes('dijkstra')
 starting_node = 'A'
 weighted = True
-latest = True
+latest = False
 
 # Parses the data from the graph string
 update_data(graph, weighted=weighted)
