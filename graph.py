@@ -9,6 +9,9 @@ def lexico_dfs(visited, graph, node, latest=False):
     if node not in visited:
         visited.append(node)
         for neighbour in sorted(graph[node], reverse=latest):
+            if len(neighbour) == 0:
+                continue
+
             lexico_dfs(visited, graph, neighbour, latest=latest)
 
 
@@ -218,14 +221,14 @@ def update_data(data_dict, weighted=True):
 #  (I'll fix it in the future)
 
 graph = {
-    'A': "('C', 6) ('G', 6) ('H', 10)",
-    'B': "('D', 15) ('F', 2) ('G', 19) ('H', 13)",
-    'C': "('A', 6) ('D', 19) ('F', 2)",
-    'D': "('B', 15) ('C', 19) ('E', 17) ('F', 16) ('G', 14)",
-    'E': "('D', 17) ('F', 16) ('G', 15) ('H', 4)",
-    'F': "('B', 2) ('C', 2) ('D', 16) ('E', 16) ('H', 17)",
-    'G': "('A', 6) ('B', 19) ('D', 14) ('E', 15)",
-    'H': "('A', 10) ('B', 13) ('E', 4) ('F', 17)"
+    'A': "C",
+    'B': "A F G H",
+    'C': "B D H",
+    'D': "E F H",
+    'E': "C D H",
+    'F': "E G H",
+    'G': "A D E F H",
+    'H': " "
 }
 
 
@@ -239,9 +242,9 @@ class TraversalModes(enum.Enum):
 
 
 # Initializing parameters for methods
-mode = TraversalModes('dijkstra')
+mode = TraversalModes('dfs')
 starting_node = 'A'
-weighted = True
+weighted = False
 latest = False
 
 # Parses the data from the graph string
